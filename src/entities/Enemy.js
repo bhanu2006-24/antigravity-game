@@ -1,17 +1,32 @@
 export default class Enemy {
-    constructor(x, y) {
+    constructor(x, y, type = 'normal') {
         this.x = x;
         this.y = y;
+        this.type = type;
         this.radius = 15;
-        this.speed = 100; // Slower than player
+        this.speed = 150;
         this.color = '#ff0055';
         this.isDead = false;
+
+        // Type specific stats
+        if (this.type === 'fast') {
+            this.speed = 250;
+            this.color = '#ffaa00';
+            this.radius = 12;
+        } else if (this.type === 'tank') {
+            this.speed = 80;
+            this.color = '#aa00ff';
+            this.radius = 20;
+            this.hp = 3; // Takes 3 hits (simulated by not dying immediately)
+        } else {
+            this.hp = 1;
+        }
     }
 
     update(dt, player, map) {
         if (this.isDead) return;
 
-        // Simple Chase AI
+        // Simple AI: Chase Player
         const dx = player.x - this.x;
         const dy = player.y - this.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -20,35 +35,42 @@ export default class Enemy {
             const moveX = (dx / dist) * this.speed * dt;
             const moveY = (dy / dist) * this.speed * dt;
 
-            const newX = this.x + moveX;
-            const newY = this.y + moveY;
+            // Collision with Map
+            if (!map.checkCollision(this.x + moveX, this.y, this.radius)) {
+                this.x += moveX;
+            }
+            if (!map.checkCollision(this.x, this.y + moveY, this.radius)) {
+                this.y += moveY;
+            }
+        }
+    }
 
-            // Collision check with walls
-            if (!map.checkCollision(newX, this.y, this.radius)) {
-                this.x = newX;
-            }
-            if (!map.checkCollision(this.x, newY, this.radius)) {
-                this.y = newY;
-            }
+    takeDamage(amount) {
+        this.hp -= amount;
+        if (this.hp <= 0) {
+            this.isDead = true;
         }
     }
 
     draw(ctx) {
         if (this.isDead) return;
 
-        ctx.save();
-        ctx.translate(this.x, this.y);
-
         ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
+        ctx.fill();
+
+        // Eyes
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(this.x - 5, this.y - 5, 3, 0, Math.PI * 2);
+        ctx.arc(this.x + 5, this.y - 5, 3, 0, Math.PI * 2);
         ctx.fill();
 
         // Glow
         ctx.shadowBlur = 10;
         ctx.shadowColor = this.color;
         ctx.stroke();
-
-        ctx.restore();
+        ctx.shadowBlur = 0;
     }
 }
