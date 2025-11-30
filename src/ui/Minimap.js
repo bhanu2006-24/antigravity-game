@@ -9,12 +9,16 @@ export default class Minimap {
         this.canvas.height = size;
         this.canvas.style.position = 'absolute';
         this.canvas.style.bottom = '20px';
-        this.canvas.style.left = '20px'; // Bottom-Left
+        this.canvas.style.right = '20px'; // Bottom-Left
         this.canvas.style.border = '2px solid #00f3ff';
         this.canvas.style.backgroundColor = 'rgba(0, 10, 20, 0.8)';
         this.canvas.style.borderRadius = '50%';
         this.canvas.style.overflow = 'hidden';
         this.canvas.style.boxShadow = '0 0 10px #00f3ff';
+        this.canvas.style.width = size + 'px';  // Add this
+        this.canvas.style.height = size + 'px'; // Add this
+        this.canvas.style.pointerEvents = 'none'; // Add this
+
 
         document.getElementById('ui-layer').appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');

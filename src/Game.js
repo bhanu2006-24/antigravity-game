@@ -9,7 +9,7 @@ import Map from './world/Map.js';
 import UIManager from './ui/UIManager.js';
 import ParticleSystem from './effects/ParticleSystem.js';
 import SoundManager from './SoundManager.js';
-// import Minimap from './ui/Minimap.js';
+import Minimap from './ui/Minimap.js';
 
 export default class Game {
     constructor(canvas) {
@@ -20,7 +20,7 @@ export default class Game {
         this.ui = new UIManager();
         this.particles = new ParticleSystem();
         this.sound = new SoundManager();
-        // this.minimap = new Minimap(150, 1500); // Radar: 150px size, 1500px range
+        this.minimap = new Minimap(150, 1500); // Radar: 150px size, 1500px range
         this.enemies = [];
         this.collectibles = [];
         this.powerups = [];
@@ -172,7 +172,7 @@ export default class Game {
         this.player.update(dt, this.input, this.map, this.particles);
         this.particles.update();
         this.ui.update(this.player, this.score, this.enemies.length);
-        // this.minimap.update(this.player, this.enemies, this.goal, this.collectibles, this.powerups);
+        this.minimap.update(this.player, this.enemies, this.goal, this.collectibles, this.powerups);
 
         // Update Powerups
         for (let i = this.powerups.length - 1; i >= 0; i--) {
