@@ -13,11 +13,12 @@ export default class Enemy {
             this.speed = 250;
             this.color = '#ffaa00';
             this.radius = 12;
+            this.hp = 2;
         } else if (this.type === 'tank') {
             this.speed = 80;
             this.color = '#aa00ff';
             this.radius = 20;
-            this.hp = 3; // Takes 3 hits (simulated by not dying immediately)
+            this.hp = 5; // Takes 3 hits (simulated by not dying immediately)
         } else {
             this.hp = 1;
         }
